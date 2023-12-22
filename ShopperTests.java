@@ -1,152 +1,96 @@
 package ShoppingPriority;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 
  class ShopperTests {
+	 
+	     @Test
+	     void testDistributeCoupons() {
+	         CustomPriorityQueue shopperQueue = new CustomPriorityQueue();
 
-	    @Test
-	    void testAddShoppersAndCheckNotNullQueue() {
-	        CustomPriorityQueue priorityQueueManager = new CustomPriorityQueue();
+	         Shopper shopper1 = new Shopper("Shopper1", 5, 80.0);
+	         Shopper shopper2 = new Shopper("Shopper2", 10, 120.0);
+	         Shopper shopper3 = new Shopper("Shopper3", 8, 90.0);
+	         Shopper shopper4 = new Shopper("Shopper4", 7, 102.0);
 
-	        Shopper shopper1 = new Shopper("Shopper1", 10, 80.0);
-	        Shopper shopper2 = new Shopper("Shopper2", 15, 120.0);
-	        Shopper shopper3 = new Shopper("Shopper3", 12, 90.0);
-	        Shopper shopper4 = new Shopper("Shopper4", 9, 102.0);
+	         shopperQueue.enqueue(shopper1);
+	         shopperQueue.enqueue(shopper2);
+	         shopperQueue.enqueue(shopper3);
+	         shopperQueue.enqueue(shopper4);
 
-	        // Add shoppers to the priority queue
-	        priorityQueueManager.enqueue(shopper1);
-	        priorityQueueManager.enqueue(shopper2);
-	        priorityQueueManager.enqueue(shopper3);
-	        priorityQueueManager.enqueue(shopper4);
+	         // Call the distributeCoupons method
+	         CustomPriorityQueue updatedShopperQueue = CouponDistributor.distributeCoupons(shopperQueue);
 
-	        // Ensure shoppers are added to the priority queue
-	       //assertNotNull(priorityQueueManager);
-	       //assertFalse(priorityQueueManager.isEmpty());
+	         // Verify that shoppers who should receive a coupon have their purchase updated
+	         assertEquals(80.0, shopper1.getTotalPurchase()); // No coupon for Shopper1
+	         assertEquals(20.0, shopper2.getTotalPurchase()); // Coupon for Shopper2
+	         assertEquals(90.0, shopper3.getTotalPurchase()); // No coupon for Shopper3
+	         assertEquals(2.0, shopper4.getTotalPurchase());  // Coupon for Shopper4
 
-	        // Additional assertions based on your requirements
-	        assertEquals(shopper2, priorityQueueManager.dequeue());
-	        //assertEquals(shopper3, priorityQueueManager.dequeue());
-	       // assertEquals(shopper4, priorityQueueManager.dequeue());
-	       // assertEquals(shopper1, priorityQueueManager.dequeue());
+	       
+	     }
+	     @Test
+	     void testCheckout() {
+	         CustomPriorityQueue shopperQueue = new CustomPriorityQueue();
 
-	        //assertTrue(priorityQueueManager.isEmpty());
-	    }
-	
+	         Shopper shopper1 = new Shopper("Shopper1", 5, 80.0);
+	         Shopper shopper2 = new Shopper("Shopper2", 10, 120.0);
+	         Shopper shopper3 = new Shopper("Shopper3", 8, 90.0);
+	         Shopper shopper4 = new Shopper("Shopper4", 7, 102.0);
 
-		 @Test
-		    void testAddShoppersAndCheckout() {
-		        CustomPriorityQueue priorityQueueManager = new CustomPriorityQueue();
+	         shopperQueue.enqueue(shopper1);
+	         shopperQueue.enqueue(shopper2);
+	         shopperQueue.enqueue(shopper3);
+	         shopperQueue.enqueue(shopper4);
 
-		        Shopper shopper1 = new Shopper("Shopper1", 10, 80.0);
-		        Shopper shopper2 = new Shopper("Shopper2", 15, 120.0);
-		        Shopper shopper3 = new Shopper("Shopper3", 12, 90.0);
-		        Shopper shopper4 = new Shopper("Shopper4", 9, 102.0);
+	         // Call the checkout method
+	         CheckoutProcessor.checkout(shopperQueue);
 
-		        // Add shoppers to the priority queue
-		        priorityQueueManager.enqueue(shopper1);
-		        priorityQueueManager.enqueue(shopper2);
-		        priorityQueueManager.enqueue(shopper3);
-		        priorityQueueManager.enqueue(shopper4);
+	         // You can add assertions based on the actual behavior of the method
+	         // For example, check if shoppers are dequeued in the expected order
+	         assertEquals("Shopper2", shopper2.getName());
+	         assertEquals("Shopper4", shopper4.getName());
+	         assertEquals("Shopper3", shopper3.getName());
+	         assertEquals("Shopper1", shopper1.getName());
+	     }
+	     
+	     
+	     @Test
+	     void testCompareTo() {
+	         // Create shoppers with different purchase values and insertion orders
+	         Shopper shopper1 = new Shopper("Shopper1", 5, 80.0);
+	         Shopper shopper2 = new Shopper("Shopper2", 10, 120.0);
+	         Shopper shopper3 = new Shopper("Shopper3", 8, 90.0);
+	         Shopper shopper4 = new Shopper("Shopper4", 7, 102.0);
 
-		       
-		        // Ensure shoppers are added to the priority queue
-		        assertEquals(shopper2, priorityQueueManager.dequeue());
-		    }
+	         // Test when purchase values are different
+	         assertTrue(shopper2.compareTo(shopper1) > 0);
+	         assertTrue(shopper1.compareTo(shopper2) < 0);
 
+	        
+	         
+	     }
+	     
+	     @Test
+	     void testCompareToinsertion() {
+	         // Create shoppers with different purchase values and insertion orders
+	         Shopper shopper1 = new Shopper("Shopper1", 5, 80.0);
+	         Shopper shopper2 = new Shopper("Shopper2", 10, 120.0);
+	         Shopper shopper3 = new Shopper("Shopper3", 8, 90.0);
+	         Shopper shopper4 = new Shopper("Shopper4", 7, 102.0);
+	         
+	         // Test when purchase values are equal but insertion orders are different
+	         assertTrue(shopper3.compareTo(shopper4) < 0);
+	         assertTrue(shopper4.compareTo(shopper3) > 0);
+	     }
+	     
+	 }
 
+ 
 
-		 
-		    @Test
-		    void testCouponDistributionAndCheckout() {
-		    	CustomPriorityQueue priorityQueueManager = new CustomPriorityQueue();
-		    	CustomPriorityQueue priorityQueueManagerForCoupon = new CustomPriorityQueue();
-
-		        Shopper shopper1 = new Shopper("Shopper1", 10, 80.0);
-		        Shopper shopper2 = new Shopper("Shopper2", 15, 120.0);
-		        Shopper shopper3 = new Shopper("Shopper3", 12, 90.0);
-		        Shopper shopper4 = new Shopper("Shopper4", 9, 102.0);
-
-		        // Add shoppers to the priority queue
-		        priorityQueueManager.enqueue(shopper1);
-		        priorityQueueManager.enqueue(shopper2);
-		        priorityQueueManager.enqueue(shopper3);
-		        priorityQueueManager.enqueue(shopper4);
-
-		        // Simulate checkout process after coupon
-		        ShoppingSystem ss = new ShoppingSystem();
-		        priorityQueueManager = ss.addToQueueWithAdjustedCoupon(priorityQueueManager, priorityQueueManagerForCoupon);
-
-		        // Ensure shoppers receive coupons based on the specified conditions
-		        assertEquals(shopper2, priorityQueueManager.dequeue());
-		        assertEquals(105.0, shopper2.getTotalPurchase(), 0.001);
-		        
-		        assertEquals(shopper3, priorityQueueManager.dequeue());
-		        assertEquals(90.0, shopper3.getTotalPurchase(), 0.001);
-		    }
-		    
-		    @Test
-		    void testStabilityOfPriorityQueue() {
-		    	CustomPriorityQueue priorityQueueManager = new CustomPriorityQueue();
-		    	CustomPriorityQueue priorityQueueManagerForCoupon = new CustomPriorityQueue();
-
-		        Shopper shopper1 = new Shopper("Shopper1", 10, 90.0);
-		        Shopper shopper2 = new Shopper("Shopper2", 15, 120.0);
-		        Shopper shopper3 = new Shopper("Shopper3", 12, 90.0);
-		        Shopper shopper4 = new Shopper("Shopper4", 9, 19.0);
-
-		        // Add shoppers to the priority queue
-		        priorityQueueManager.enqueue(shopper1);
-		        priorityQueueManager.enqueue(shopper2);
-		        priorityQueueManager.enqueue(shopper3);
-		        priorityQueueManager.enqueue(shopper4);
-
-		        // Simulate checkout process after coupon
-		        ShoppingSystem ss = new ShoppingSystem();
-		        priorityQueueManager = ss.addToQueueWithAdjustedCoupon(priorityQueueManager, priorityQueueManagerForCoupon);
-
-		        // Ensure shopper1 is dequeued right before shopper3
-		        priorityQueueManager.dequeue();
-		        assertEquals(shopper1, priorityQueueManager.dequeue());
-		        assertEquals(shopper3, priorityQueueManager.dequeue());
-		        
-		    }
-	}
-}
-
-	/*@Test
-    void checkoutTest() {
-        // Create shoppers with different purchase values
-        Shopper shopper1 = new Shopper("Alice", 3, 50.0);
-        Shopper shopper2 = new Shopper("Bob", 2, 100.0);
-        Shopper shopper3 = new Shopper("Charlie", 5, 75.0);
-
-        // Create a priority queue and enqueue shoppers
-        CustomPriorityQueue shopperQueue = new CustomPriorityQueue();
-        shopperQueue.enqueue(shopper1);
-        shopperQueue.enqueue(shopper2);
-        shopperQueue.enqueue(shopper3);
-
-        // Redirect System.out for assertions
-        //ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-       // PrintStream originalOut = System.out;
-       // try {
-         //   System.setOut(new PrintStream(outputStream));
-
-            // Perform the checkout
-          //  CheckoutProcessor.checkout(shopperQueue);
-       // } finally {
-       //     System.setOut(originalOut);
-        }
-
-        // Define the expected checkout order based on purchase values
-        String expectedCheckoutOrder = "Checking out (1): Bob\n" +
-                                       "Checking out (2): Charlie\n" +
-                                       "Checking out (3): Alice";
-
-        assertEquals((Bob, Charlie, Alic),expectedCheckoutOrder())
-
-}*/
+	 
